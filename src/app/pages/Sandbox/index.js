@@ -10,7 +10,9 @@ import { sandboxesSelector } from 'app/store/entities/sandboxes/selectors';
 import { entitiesSelector } from 'app/store/entities/selectors';
 import sandboxActions from 'app/store/entities/sandboxes/actions';
 import userActionCreators from 'app/store/user/actions';
-import { jwtSelector, userIdSelector } from 'app/store/user/selectors';
+import { jwtSelector } from 'app/store/user/selectors';
+import { preferencesSelector } from 'app/store/preferences/selectors';
+import type { Preferences } from 'app/store/preferences/reducer';
 
 import type { Sandbox } from 'app/store/entities/sandboxes/entity';
 import Title from 'app/components/text/Title';
@@ -24,6 +26,7 @@ type Props = {
   sandboxActions: typeof sandboxActions,
   userActions: typeof userActionCreators,
   hasLogin: boolean,
+  preferences: Preferences,
   match: { url: string, params: { id: ?string } },
 };
 type State = {
@@ -35,14 +38,15 @@ const mapStateToProps = createSelector(
   entitiesSelector,
   (_, props) => props.match.params.id,
   jwtSelector,
-  (sandboxes, entities, id, jwt) => {
+  preferencesSelector,
+  (sandboxes, entities, id, jwt, preferences) => {
     let sandbox = sandboxes[id];
 
     if (sandbox) {
       sandbox = denormalize(sandboxes[id], sandboxEntity, entities);
     }
 
-    return { sandbox, sandboxes, hasLogin: !!jwt };
+    return { sandbox, sandboxes, hasLogin: !!jwt, preferences };
   }
 );
 const mapDispatchToProps = dispatch => ({
@@ -88,7 +92,7 @@ class SandboxPage extends React.PureComponent {
   state = { notFound: false };
 
   render() {
-    const { sandbox } = this.props;
+    const { sandbox, preferences } = this.props;
     if (this.state.notFound) {
       return (
         <Centered horizontal vertical>
@@ -106,7 +110,7 @@ class SandboxPage extends React.PureComponent {
 
     return (
       <Centered horizontal vertical>
-        <Editor sandbox={sandbox} />
+        <Editor reverse={preferences.workspaceOnRight} sandbox={sandbox} />
       </Centered>
     );
   }

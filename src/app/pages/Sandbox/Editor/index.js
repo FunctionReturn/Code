@@ -11,14 +11,10 @@ type Props = {
   sandbox: Sandbox,
 };
 
-export default ({ sandbox }: Props) => (
-  <SplitPane
-    split="vertical"
-    minSize={100}
-    defaultSize={16 * 16}
-    style={{ top: 0 }}
-  >
-    <Workspace sandbox={sandbox} />
-    <Content sandbox={sandbox} />
+export default ({ sandbox, reverse }: Props) => (
+  <SplitPane split="vertical" minSize={100} style={{ top: 0 }}>
+    {[<Workspace sandbox={sandbox} />, <Content sandbox={sandbox} />]
+      .sort(() => reverse ? 1 : -1)
+      .map(x => x)}
   </SplitPane>
 );

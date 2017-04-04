@@ -64,6 +64,15 @@ class Preferences extends React.PureComponent {
             tooltip="Only update on save"
           />
         </PreferenceContainer>
+        <WorkspaceSubtitle>Workspace</WorkspaceSubtitle>
+        <PreferenceContainer>
+          <Preference
+            title="Show on right"
+            enabled={preferences.workspaceOnRight}
+            onClick={preferencesActions.setWorkspaceOnRight}
+            tooltip="Only update on save"
+          />
+        </PreferenceContainer>
       </Container>
     );
   }
