@@ -104,7 +104,9 @@
     "reselect": "^2.5.4",
     "store": "^2.0.4",
     "styled-components": "^1.2.1",
-    "tern": "^0.21.0"
+    "tern": "^0.21.0",
+    "vue-template-compiler": "^2.2.6",
+    "vue-template-es2015-compiler": "^1.5.1"
   },
   "scripts": {
     "start": "node scripts/start.js",

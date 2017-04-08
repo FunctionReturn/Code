@@ -34,9 +34,10 @@ const compileCode = (code: string = '', moduleName: string = 'unknown') => {
 };
 
 function evaluate(code, require) {
+  const module = {};
   const exports = { __esModule: true };
   eval(code); // eslint-disable-line no-eval
-  return exports;
+  return { ...{ default: module.exports }, ...exports };
 }
 
 export default function evaluateJS(

@@ -9,6 +9,7 @@ import evalJS, { deleteCache as deleteJSCache } from './js';
 import evalHTML from './html';
 import evalCSS from './css';
 import evalJson from './json';
+import evalVue from './vue';
 
 const MAX_DEPTH = 20;
 
@@ -16,6 +17,7 @@ function doEval(mainModule, sandboxId, modules, directories, manifest, depth) {
   const html = /\.html$/;
   const css = /\.css$/;
   const json = /\.json$/;
+  const vue = /\.vue$/;
 
   if (html.test(mainModule.title)) {
     return evalHTML(
@@ -41,6 +43,17 @@ function doEval(mainModule, sandboxId, modules, directories, manifest, depth) {
 
   if (json.test(mainModule.title)) {
     return evalJson(
+      mainModule,
+      sandboxId,
+      modules,
+      directories,
+      manifest,
+      depth
+    );
+  }
+
+  if (vue.test(mainModule.title)) {
+    return evalVue(
       mainModule,
       sandboxId,
       modules,

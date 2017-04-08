@@ -149,7 +149,7 @@ export default class CodeEditor extends React.PureComponent {
       if (kind[1] === 'css') {
         await System.import('codemirror/mode/css/css');
         return 'css';
-      } else if (kind[1] === 'html') {
+      } else if (kind[1] === 'html' || kind[1] === 'vue') {
         await System.import('codemirror/mode/htmlmixed/htmlmixed');
         return 'htmlmixed';
       }
