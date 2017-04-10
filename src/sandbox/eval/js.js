@@ -59,9 +59,14 @@ export default function evaluateJS(
       // eslint-disable-line no-unused-vars
       if (/^\w/.test(path)) {
         // So it must be a dependency
-        const dependencyManifest = manifest[path] || manifest[`${path}.js`];
-        if (dependencyManifest) {
-          return window.dependencies(dependencyManifest.id);
+        const dependencyModuleIdString = manifest.externals[path] ||
+          manifest.externals[`${path}.js`];
+
+        const dependencyModuleId = dependencyModuleIdString.match(
+          /dll_bundle\((.*)\)/
+        )[1];
+        if (dependencyModuleId) {
+          return window.dll_bundle(dependencyModuleId);
         } else {
           throw new DependencyNotFoundError(path);
         }

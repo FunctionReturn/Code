@@ -20,12 +20,13 @@ let url = null;
 
 async function addDependencyBundle() {
   if (url !== '') {
+    window.dll_bundle = null;
     const script = document.createElement('script');
     script.setAttribute('src', url);
     script.setAttribute('async', false);
     document.head.appendChild(script);
 
-    while (window.dependencies == null) {
+    while (window.dll_bundle == null) {
       await delay(100);
     }
   }
