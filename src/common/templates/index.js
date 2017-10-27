@@ -32,6 +32,16 @@ export const reactTs = {
   },
 };
 
+export const reason = {
+  name: 'create-reason-react-app',
+  url: 'https://github.com/wmonk/create-reason-react-app',
+  color: decorateSelector(() => '#D94E44'),
+
+  sourceConfig: {
+    entry: 'index.re',
+  },
+};
+
 export const vue = {
   name: 'vue-cli',
   url: 'https://github.com/vuejs/vue-cli',
@@ -117,6 +127,8 @@ export default function getDefinition(
       return reactTs;
     case svelte.name:
       return svelte;
+    case reason.name:
+      return reason;
     default:
       return react;
   }

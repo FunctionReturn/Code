@@ -132,7 +132,11 @@ module.exports = {
       },
     ],
 
-    noParse: [/eslint\.4\.1\.0\.min\.js$/, /typescriptServices\.js$/],
+    noParse: [
+      /eslint\.4\.1\.0\.min\.js$/,
+      /bucklescript\.js$/,
+      /typescriptServices\.js$/,
+    ],
   },
 
   resolve: {
