@@ -63,6 +63,7 @@ module.exports = {
         exclude: [
           /eslint\.4\.1\.0\.min\.js$/,
           /typescriptServices\.js$/,
+          /expand-full\.js$/,
           new RegExp('babel-runtime\\' + path.sep),
         ],
         loader: 'happypack/loader',
@@ -123,6 +124,9 @@ module.exports = {
       /eslint\.4\.1\.0\.min\.js$/,
       /typescriptServices\.js$/,
       /browserfs\.js/,
+      /vscode-languageserver-types/,
+      /jsonc-parser/,
+      /expand-full/,
     ],
   },
 

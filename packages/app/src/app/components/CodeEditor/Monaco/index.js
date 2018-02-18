@@ -180,7 +180,7 @@ class MonacoEditor extends React.Component<Props, State> implements Editor {
     await this.openNewModel(currentModule.id, currentModule.title);
 
     this.addKeyCommands();
-    import(/* webpackChunkName: 'monaco-emmet' */ './enable-emmet').then(
+    import(/* webpackChunkName: 'monaco-emmet' */ './vscode-emmet/enable-emmet').then(
       enableEmmet => {
         enableEmmet.default(editor, monaco, {});
       }

@@ -58,6 +58,13 @@
     "@emmetio/stream-reader" "^2.0.0"
     "@emmetio/stream-reader-utils" "^0.1.0"
 
+"@emmetio/css-parser@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@emmetio/css-parser/-/css-parser-0.4.0.tgz#96135093480c79703df0e4f178f7f8f2b669fbc2"
+  dependencies:
+    "@emmetio/stream-reader" "^2.2.0"
+    "@emmetio/stream-reader-utils" "^0.1.0"
+
 "@emmetio/css-snippets-resolver@^0.2.5":
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/@emmetio/css-snippets-resolver/-/css-snippets-resolver-0.2.7.tgz#dac022650f89c59041eb75f52c5a8f1018d838c9"
@@ -83,6 +90,10 @@
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/@emmetio/extract-abbreviation/-/extract-abbreviation-0.1.3.tgz#dc00bf488ddf86a2a82ca95fb2ccb575bd832f68"
 
+"@emmetio/extract-abbreviation@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@emmetio/extract-abbreviation/-/extract-abbreviation-0.1.4.tgz#f5be070db97901ecc37e5204f2ace68242cdcefa"
+
 "@emmetio/field-parser@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@emmetio/field-parser/-/field-parser-0.3.0.tgz#7a7cf51c399aea7bae455e0fcf3eb328f8c0c215"
@@ -93,6 +104,13 @@
 "@emmetio/html-matcher@^0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@emmetio/html-matcher/-/html-matcher-0.3.2.tgz#efe0023e97191de1639f01fdcf0a198b588d3624"
+  dependencies:
+    "@emmetio/stream-reader" "^2.0.0"
+    "@emmetio/stream-reader-utils" "^0.1.0"
+
+"@emmetio/html-matcher@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@emmetio/html-matcher/-/html-matcher-0.3.3.tgz#0bbdadc0882e185950f03737dc6dbf8f7bd90728"
   dependencies:
     "@emmetio/stream-reader" "^2.0.0"
     "@emmetio/stream-reader-utils" "^0.1.0"
@@ -8646,6 +8664,10 @@ json5@^0.5.0, json5@^0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/json5/-/json5-0.5.1.tgz#1eade7acc012034ad84e2396767ead9fa5495821"
 
+jsonc-parser@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/jsonc-parser/-/jsonc-parser-1.0.1.tgz#7f8f296414e6e7c4a33b9e4914fc8c47e4421675"
+
 jsonfile@^2.1.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-2.4.0.tgz#3736a2b428b87bbda0cc83b53fa3d633a35c2ae8"
@@ -15660,6 +15682,18 @@ vm-browserify@0.0.4:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-0.0.4.tgz#5d7ea45bbef9e4a6ff65f95438e0a87c357d5a73"
   dependencies:
     indexof "0.0.1"
+
+vscode-emmet-helper@^1.1.36:
+  version "1.1.36"
+  resolved "https://registry.yarnpkg.com/vscode-emmet-helper/-/vscode-emmet-helper-1.1.36.tgz#537cbf91041a3d426f6f24dd9834550a26e61685"
+  dependencies:
+    "@emmetio/extract-abbreviation" "^0.1.4"
+    jsonc-parser "^1.0.0"
+    vscode-languageserver-types "^3.6.0-next.1"
+
+vscode-languageserver-types@^3.6.0-next.1:
+  version "3.6.0-next.1"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.6.0-next.1.tgz#98e488d3f87b666b4ee1a3d89f0023e246d358f3"
 
 vue-hot-reload-api@^2.2.4:
   version "2.2.4"
