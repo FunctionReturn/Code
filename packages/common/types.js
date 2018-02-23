@@ -110,16 +110,21 @@ export type GitInfo = {
   commitSha: string,
 };
 
-export type Sandbox = {
+// A Base sandbox is a basic sandbox with the absolute minimum to make it work
+// with the editor. This is used for projects on eg. IndexedDB and Dropbox.
+export type BaseSandbox = {
   id: string,
-  title: ?string,
+  modules: Array<Module>,
+  directories: Array<Directory>,
+};
+
+export type Sandbox = BaseSandbox & {
+  title: string,
   description: string,
   viewCount: number,
   likeCount: number,
   forkCount: number,
   userLiked: boolean,
-  modules: Array<Module>,
-  directories: Array<Directory>,
   owned: boolean,
   npmDependencies: {
     [dep: string]: string,
