@@ -23,7 +23,14 @@ function EditIcons({
   onEdit,
   onCreateFile,
   onCreateDirectory,
+  active,
 }) {
+  // Phones need double click if we show elements on click, that's why we only want
+  // to show these edit icons when the user clicks and hasn't activated the module
+  if (window.__isTouch && !active) {
+    return null;
+  }
+
   return (
     <div className={className}>
       {hovering && (
