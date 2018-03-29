@@ -16,7 +16,8 @@ export type Template =
   | 'parcel'
   | 'angular-cli'
   | 'svelte'
-  | 'preact-cli';
+  | 'preact-cli'
+  | 'vue-cli';
 
 export interface CorrectionAction extends Action {
   message: string;

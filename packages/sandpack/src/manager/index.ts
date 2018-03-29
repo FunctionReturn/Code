@@ -1,6 +1,7 @@
 /// <reference types="node" />
-import { dispatch, listen, registerFrame } from 'codesandbox-api';
+import { dispatch, actions, listen, registerFrame } from 'codesandbox-api';
 import { getTemplate } from 'codesandbox-import-utils/lib/create-sandbox/templates';
+import { ITemplate } from 'codesandbox-import-util-types';
 
 import isEqual from 'lodash.isequal';
 
@@ -56,7 +57,7 @@ export interface ISandboxInfo {
    *
    * @type {string}
    */
-  template?: string;
+  template?: ITemplate;
 }
 
 const BUNDLER_URL =
@@ -161,21 +162,22 @@ export default class PreviewManager {
       {}
     );
 
-    dispatch({
-      type: 'compile',
-      codesandbox: true,
-      version: 3,
-      modules,
-      externalResources: [],
-      template:
+    dispatch(
+      actions.preview.compile(
+        modules,
         this.sandboxInfo.template ||
-        getTemplate(packageJSON, normalizedModules),
-      showOpenInCodeSandbox: true,
-      skipEval: this.options.skipEval || false,
-    });
+          getTemplate(packageJSON, normalizedModules),
+        {
+          version: 3,
+          externalResources: [],
+          showOpenInCodeSandbox: true,
+          skipEval: this.options.skipEval || false,
+        }
+      )
+    );
   }
 
-  public dispatch(message: Object) {
+  public dispatch(message: any) {
     dispatch(message);
   }
 
