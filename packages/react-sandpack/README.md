@@ -18,6 +18,9 @@ import {
   SandpackProvider,
 } from 'react-sandpack/es/components';
 
+// Default styles, overidable
+import 'react-sandpack/dist/styles.css';
+
 const files = {
   '/index.js': {
     code: "document.body.innerHTML = `<div>${require('uuid')}</div>`",

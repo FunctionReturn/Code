@@ -1,5 +1,5 @@
 import React from 'react';
-import { listen, dispatch } from 'codesandbox-api';
+import { actions, listen, dispatch } from 'codesandbox-api';
 
 import ClearIcon from 'react-icons/lib/md/clear-all';
 
@@ -35,50 +35,33 @@ class Console extends React.Component {
   }
 
   handleMessage = data => {
-    switch (data.type) {
-      case 'console': {
-        const { method, args: jsonArgs } = data;
-        const args = CircularJSON.parse(jsonArgs);
-        this.addMessage(method, args);
-        break;
-      }
-      case 'clear-console': {
-        this.clearConsole();
-        break;
-      }
-      case 'eval-result': {
-        const { result, error } = data;
-
-        const parsedJson = result ? CircularJSON.parse(result) : result;
-
-        if (!error) {
-          this.addMessage('log', [parsedJson], 'return');
-        } else {
-          this.addMessage('error', [parsedJson]);
+    if (data.type === 'action') {
+      switch (data.action) {
+        case 'console': {
+          const { method, args: jsonArgs } = data;
+          const args = CircularJSON.parse(jsonArgs);
+          this.addMessage(method, args);
+          break;
         }
-        break;
-      }
-      case 'test-result': {
-        const { result, error } = data;
+        case 'clear-console': {
+          this.clearConsole();
+          break;
+        }
+        case 'eval-result': {
+          const { result, error } = data;
 
-        const aggregatedResults = result ? CircularJSON.parse(result) : result;
-        if (!error) {
-          if (aggregatedResults) {
-            const { summaryMessage, failedMessages } = aggregatedResults;
-            this.addMessage('log', [summaryMessage]);
-            failedMessages.forEach(t => {
-              this.addMessage('warn', [t]);
-            });
+          const parsedJson = result ? CircularJSON.parse(result) : result;
+
+          if (!error) {
+            this.addMessage('log', [parsedJson], 'return');
           } else {
-            this.addMessage('warn', [undefined], 'return');
+            this.addMessage('error', [parsedJson]);
           }
-        } else {
-          this.addMessage('log', [error]);
+          break;
         }
-        break;
-      }
-      default: {
-        break;
+        default: {
+          break;
+        }
       }
     }
   };
@@ -133,7 +116,7 @@ class Console extends React.Component {
     this.addMessage('log', [command], 'command');
 
     // TODO move everything of frames to store and this command too
-    dispatch({ type: 'evaluate', command });
+    dispatch(actions.preview.evaluate(command));
   };
 
   render() {
@@ -166,7 +149,7 @@ export default {
     {
       title: 'Clear Console',
       onClick: () => {
-        dispatch({ type: 'clear-console' });
+        dispatch(actions.console.clear());
       },
       Icon: ClearIcon,
     },

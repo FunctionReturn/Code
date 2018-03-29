@@ -1,12 +1,6 @@
-import { Action } from './';
+import { GlyphAction } from './message-types';
 
 export interface GlyphOptions {
-  line: number;
-  path: string;
-  className: string;
-}
-
-export interface GlyphAction extends Action {
   line: number;
   path: string;
   className: string;

@@ -1,16 +1,6 @@
-import { Action } from './';
+import { CorrectionAction } from './message-types';
 
 export interface CorrectionOptions {
-  line?: number;
-  column?: number;
-  path: string;
-  payload?: Object;
-  severity: 'warning' | 'notice';
-  source?: string;
-}
-
-export interface CorrectionAction extends Action {
-  message: string;
   line?: number;
   column?: number;
   path: string;
@@ -31,14 +21,7 @@ export interface CorrectionAction extends Action {
  */
 export function show(
   message: string,
-  {
-    line,
-    column,
-    path,
-    payload,
-    severity = 'warning',
-    source = '',
-  }: CorrectionOptions = {
+  { line, column, path, payload, severity = 'warning', source = '' }: CorrectionOptions = {
     path: '',
     severity: 'warning',
     source: '',

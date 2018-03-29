@@ -1,4 +1,4 @@
-import { dispatch } from 'codesandbox-api';
+import { actions, dispatch } from 'codesandbox-api';
 
 import transformJSON from './transform-json';
 
@@ -7,20 +7,17 @@ function replaceConsoleMethod(method) {
   console[method] = (...args) => {
     try {
       if (method === 'clear') {
-        dispatch({ type: 'clear-console' });
+        dispatch(actions.console.clear());
       } else if (args.length > 0) {
-        dispatch({
-          type: 'console',
-          method,
-          args: transformJSON(args),
-        });
+        dispatch(actions.console.logConsole(method, transformJSON(args)));
       }
     } catch (e) {
-      dispatch({
-        type: 'console',
-        method,
-        args: JSON.stringify(['Unknown message, open your console to see it.']),
-      });
+      dispatch(
+        actions.console.logConsole(
+          method,
+          JSON.stringify(['Unknown message, open your console to see it.'])
+        )
+      );
     }
     oldMethod.apply(console, args);
   };

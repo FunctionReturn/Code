@@ -1,4 +1,9 @@
-import { dispatch, reattach, clearErrorTransformers } from 'codesandbox-api';
+import {
+  dispatch,
+  actions,
+  reattach,
+  clearErrorTransformers,
+} from 'codesandbox-api';
 import { absolute } from 'common/utils/path';
 import _debug from 'app/utils/debug';
 import parseConfigurations from 'common/templates/configuration/parse';
@@ -297,9 +302,7 @@ async function compile({
   showOpenInCodeSandbox = false,
   skipEval = false,
 }) {
-  dispatch({
-    type: 'start',
-  });
+  dispatch(actions.status.start());
 
   const startTime = Date.now();
   try {
@@ -349,7 +352,7 @@ async function compile({
 
     const parsedPackageJSON = configurations.package.parsed;
 
-    dispatch({ type: 'status', status: 'installing-dependencies' });
+    dispatch(actions.status.set('installing-dependencies'));
 
     const dependencies = getDependencies(
       parsedPackageJSON,
@@ -393,14 +396,14 @@ async function compile({
     const main = absolute(foundMain);
     managerModuleToTranspile = modules[main];
 
-    dispatch({ type: 'status', status: 'transpiling' });
+    dispatch(actions.status.set('transpiling'));
 
     await manager.preset.setup(manager);
     await manager.transpileModules(managerModuleToTranspile);
 
     debug(`Transpilation time ${Date.now() - t}ms`);
 
-    dispatch({ type: 'status', status: 'evaluating' });
+    dispatch(actions.status.set('evaluating'));
 
     const managerTranspiledModuleToTranspile = manager.getTranspiledModule(
       managerModuleToTranspile
@@ -498,7 +501,7 @@ async function compile({
       createCodeSandboxOverlay(modules);
     }
 
-    dispatch({ type: 'status', status: 'running-tests' });
+    dispatch(actions.status.set('running-tests'));
 
     try {
       // Testing
@@ -517,9 +520,7 @@ async function compile({
 
     debug(`Total time: ${Date.now() - startTime}ms`);
 
-    dispatch({
-      type: 'success',
-    });
+    dispatch(actions.status.success());
 
     manager.save();
   } catch (e) {
@@ -546,20 +547,18 @@ async function compile({
         ...manager.serialize(),
       };
       delete managerState.cachedPaths;
+      delete managerState.meta;
       managerState.entry = managerModuleToTranspile
         ? managerModuleToTranspile.path
         : null;
 
-      dispatch({
-        type: 'state',
-        state: managerState,
-      });
+      dispatch(actions.state.send(managerState));
     }
   }
   firstLoad = false;
 
-  dispatch({ type: 'status', status: 'idle' });
-  dispatch({ type: 'done' });
+  dispatch(actions.status.set('idle'));
+  dispatch(actions.status.done());
 
   if (typeof window.__puppeteer__ === 'function') {
     window.__puppeteer__('done');

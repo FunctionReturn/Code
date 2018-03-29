@@ -1,5 +1,6 @@
 // import * as debug from 'debug';
 import host from './host';
+import { CodeSandboxMessage } from '../actions/message-types';
 
 const bundlers: Window[] = [];
 
@@ -14,7 +15,7 @@ export const isStandalone =
  * @param {*} message
  * @returns
  */
-export function dispatch(message: Object) {
+export function dispatch(message: CodeSandboxMessage) {
   if (!message) return;
 
   const newMessage = { ...message, codesandbox: true };
@@ -30,7 +31,7 @@ export function dispatch(message: Object) {
   }
 }
 
-export type Callback = (message: Object, source?: Window) => void;
+export type Callback = (message: CodeSandboxMessage, source?: Window) => void;
 
 const listeners: { [id: string]: Callback } = {};
 let listenerId = 0;
@@ -48,7 +49,7 @@ export function listen(callback: Callback): () => void {
   };
 }
 
-export function notifyListeners(data: Object, source?: MessageEvent['source']) {
+export function notifyListeners(data: CodeSandboxMessage, source?: MessageEvent['source']) {
   Object.keys(listeners).forEach(listenerId => {
     if (listeners[listenerId]) {
       listeners[listenerId](data, source);

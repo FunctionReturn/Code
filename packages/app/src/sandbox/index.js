@@ -1,5 +1,5 @@
 import { camelizeKeys } from 'humps';
-import { isStandalone, listen, dispatch } from 'codesandbox-api';
+import { actions, isStandalone, listen, dispatch } from 'codesandbox-api';
 
 import registerServiceWorker from 'common/registerServiceWorker';
 import requirePolyfills from 'common/load-dynamic-polyfills';
@@ -61,11 +61,7 @@ requirePolyfills().then(() => {
         }
 
         try {
-          dispatch({
-            type: 'eval-result',
-            error,
-            result: transformJSON(result),
-          });
+          dispatch(actions.console.logEvalResult(error, transformJSON(result)));
         } catch (e) {
           console.error(e);
         }

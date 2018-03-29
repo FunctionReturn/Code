@@ -1,10 +1,7 @@
-import { dispatch, isStandalone } from 'codesandbox-api';
+import { actions, dispatch, isStandalone } from 'codesandbox-api';
 
 function sendUrlChange(url: string) {
-  dispatch({
-    type: 'urlchange',
-    url,
-  });
+  dispatch(actions.navigation.changeNavigationURL(url));
 }
 
 /* eslint-disable no-console */

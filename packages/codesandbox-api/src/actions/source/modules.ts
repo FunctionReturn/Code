@@ -1,6 +1,6 @@
-import { Action } from '../';
+import { RenameModuleAction } from '../message-types';
 
-export function rename(path: string, title: string) {
+export function rename(path: string, title: string): RenameModuleAction {
   return {
     type: 'action',
     action: 'source.module.rename',

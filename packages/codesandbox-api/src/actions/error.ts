@@ -1,15 +1,6 @@
-import { Action } from './';
+import { ErrorAction } from './message-types';
 
 export interface ErrorOptions {
-  line?: number;
-  column?: number;
-  path?: string;
-  payload?: Object;
-}
-
-export interface ErrorAction extends Action {
-  title: string;
-  message: string;
   line?: number;
   column?: number;
   path?: string;

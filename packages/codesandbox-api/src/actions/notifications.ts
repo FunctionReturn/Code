@@ -1,10 +1,4 @@
-import { Action } from './';
-
-export interface NotificationAction extends Action {
-  title: string;
-  notificationType: 'notice' | 'warning' | 'error' | 'success';
-  timeAlive: number;
-}
+import { NotificationAction } from './message-types';
 
 /**
  * Returns an action that describes to open a notification in the editor
@@ -18,7 +12,7 @@ export interface NotificationAction extends Action {
 export function show(
   title: string,
   notificationType: 'notice' | 'warning' | 'error' | 'success' = 'notice',
-  timeAlive: number = 2,
+  timeAlive: number = 2
 ): NotificationAction {
   // TODO automatically add type: 'action', maybe do this after conversion to TS
   return {

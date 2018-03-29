@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import type { Sandbox, Module, Preferences } from 'common/types';
-import { listen, dispatch, registerFrame } from 'codesandbox-api';
+import { actions, listen, dispatch, registerFrame } from 'codesandbox-api';
 import { debounce } from 'lodash';
 
 import { frameUrl } from 'common/utils/url-generator';
@@ -122,33 +122,28 @@ class BasePreview extends React.Component<Props, State> {
       } else {
         const { type } = data;
 
-        switch (type) {
-          case 'render': {
-            this.executeCodeImmediately();
-            break;
-          }
-          case 'urlchange': {
-            this.commitUrl(data.url);
-            break;
-          }
-          case 'resize': {
-            if (this.props.onResize) {
-              this.props.onResize(data.height);
+        if (type === 'action') {
+          switch (type.action) {
+            case 'urlchange': {
+              this.commitUrl(data.url);
+              break;
             }
-            break;
-          }
-          case 'action': {
-            if (this.props.onAction) {
-              this.props.onAction({
-                ...data,
-                sandboxId: this.props.sandbox.id,
-              });
+            case 'resize': {
+              if (this.props.onResize) {
+                this.props.onResize(data.height);
+              }
+              break;
             }
+            default: {
+              if (this.props.onAction) {
+                this.props.onAction({
+                  ...data,
+                  sandboxId: this.props.sandbox.id,
+                });
+              }
 
-            break;
-          }
-          default: {
-            break;
+              break;
+            }
           }
         }
       }
@@ -175,7 +170,7 @@ class BasePreview extends React.Component<Props, State> {
 
     if (settings.clearConsoleEnabled) {
       console.clear(); // eslint-disable-line no-console
-      dispatch({ type: 'clear-console' });
+      dispatch(actions.console.clear());
     }
 
     // Do it here so we can see the dependency fetching screen if needed
@@ -184,10 +179,7 @@ class BasePreview extends React.Component<Props, State> {
       this.handleRefresh();
     } else {
       if (!this.props.isInProjectView) {
-        dispatch({
-          type: 'evaluate',
-          command: `history.pushState({}, null, '/')`,
-        });
+        dispatch(actions.preview.evaluate(`history.pushState({}, null, '/')`));
       }
 
       const modulesObject = {};
@@ -212,17 +204,16 @@ class BasePreview extends React.Component<Props, State> {
         };
       }
 
-      dispatch({
-        type: 'compile',
-        version: 3,
-        entry: this.getRenderedModule(),
-        modules: modulesToSend,
-        sandboxId: sandbox.id,
-        externalResources: sandbox.externalResources,
-        isModuleView: !this.props.isInProjectView,
-        template: sandbox.template,
-        hasActions: !!this.props.onAction,
-      });
+      dispatch(
+        actions.preview.compile(modulesToSend, sandbox.template, {
+          entry: this.getRenderedModule(),
+          sandboxId: sandbox.id,
+          externalResources: sandbox.externalResources,
+          isModuleView: !this.props.isInProjectView,
+          hasActions: !!this.props.onAction,
+          version: 3,
+        })
+      );
     }
   };
 
@@ -264,9 +255,7 @@ class BasePreview extends React.Component<Props, State> {
   };
 
   handleBack = () => {
-    dispatch({
-      type: 'urlback',
-    });
+    dispatch(actions.preview.history.back());
 
     const { historyPosition, history } = this.state;
     this.setState({
@@ -276,9 +265,7 @@ class BasePreview extends React.Component<Props, State> {
   };
 
   handleForward = () => {
-    dispatch({
-      type: 'urlforward',
-    });
+    dispatch(actions.preview.history.forward());
 
     const { historyPosition, history } = this.state;
     this.setState({
