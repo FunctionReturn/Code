@@ -23,7 +23,11 @@ const SignIn = Loadable({
   LoadingComponent: Loading,
 });
 const Live = Loadable({
-  loader: () => import(/* webpackChunkName: 'page-sign-in' */ './Live'),
+  loader: () => import(/* webpackChunkName: 'page-live' */ './Live'),
+  LoadingComponent: Loading,
+});
+const Dashboard = Loadable({
+  loader: () => import(/* webpackChunkName: 'page-dashboard' */ './Dashboard'),
   LoadingComponent: Loading,
 });
 const ZeitSignIn = Loadable({
@@ -114,6 +118,7 @@ class Routes extends React.Component<Props> {
             <Route path="/patron" component={Patron} />
             <Route path="/cli/login" component={CLI} />
             <Route path="/legal" component={Terms} />
+            <Route path="/dashboard" component={Dashboard} />
             <Route path="/auth/zeit" component={ZeitSignIn} />
             <Route component={NotFound} />
           </Switch>
