@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { inject, observer } from 'mobx-react';
+import { connect } from '@cerebral/react';
+import { state, sequences, computed } from 'cerebral/tags';
 import { Link } from 'react-router-dom';
 import { patronUrl } from 'common/utils/url-generator';
 
@@ -13,8 +14,10 @@ import SignInButton from '../SignInButton';
 import UserMenu from '../UserMenu';
 import { LogoWithBorder, Border, Title, Actions, Action } from './elements';
 
-function Navigation({ signals, store, title }) {
-  const { user, userMenuOpen, isPatron } = store;
+function Navigation({ get, title }) {
+  const user = get(state`user`);
+  const isPatron = get(computed`isPatron`);
+  const modalOpened = get(sequences`modalOpened`);
 
   return (
     <Row justifyContent="space-between">
@@ -41,7 +44,7 @@ function Navigation({ signals, store, title }) {
           )}
           <Action
             onClick={() =>
-              signals.modalOpened({
+              modalOpened({
                 modal: 'newSandbox',
               })
             }
@@ -60,4 +63,4 @@ function Navigation({ signals, store, title }) {
     </Row>
   );
 }
-export default inject('store', 'signals')(observer(Navigation));
+export default connect(Navigation);

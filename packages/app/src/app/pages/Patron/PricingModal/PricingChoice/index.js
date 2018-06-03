@@ -1,5 +1,6 @@
 import React from 'react';
-import { inject, observer } from 'mobx-react';
+import { connect } from '@cerebral/react';
+import { state, sequences, computed } from 'cerebral/tags';
 import moment from 'moment';
 
 import Centered from 'common/components/flex/Centered';
@@ -21,14 +22,20 @@ import {
   StyledSignInButton,
 } from './elements';
 
-function PricingChoice({ store, signals, badge }) {
+function PricingChoice({ get, badge }) {
+  const isPatron = get(computed`isPatron`);
+  const isLoggedIn = get(computed`isLoggedIn`);
+  const user = get(state`user`);
+  const patron = get(state`patron`);
+  const patronSequences = get(sequences`patron`);
+
   return (
     <Container>
       <Centered horizontal vertical={false}>
         <Title>Pay what you want</Title>
-        {store.isPatron && (
+        {isPatron && (
           <ThankYou
-            price={store.user.subscription.amount}
+            price={user.subscription.amount}
             color={badges[badge].colors[0]}
           />
         )}
@@ -36,9 +43,11 @@ function PricingChoice({ store, signals, badge }) {
           <Currency>$</Currency>
           <PriceInput
             onChange={event =>
-              signals.patron.priceChanged({ price: Number(event.target.value) })
+              patronSequences.priceChanged({
+                price: Number(event.target.value),
+              })
             }
-            value={store.patron.price}
+            value={patron.price}
             type="number"
           />
           <Month>/month</Month>
@@ -46,35 +55,35 @@ function PricingChoice({ store, signals, badge }) {
         <RangeContainer>
           <Range
             onChange={value =>
-              signals.patron.priceChanged({ price: Number(value) })
+              patronSequences.priceChanged({ price: Number(value) })
             }
             min={5}
             max={50}
             step={1}
-            value={store.patron.price}
+            value={patron.price}
             color={badges[badge].colors[0]}
           />
         </RangeContainer>
-        {store.isLoggedIn ? ( // eslint-disable-line no-nested-ternary
-          store.isPatron ? (
+        {isLoggedIn ? ( // eslint-disable-line no-nested-ternary
+          isPatron ? (
             <ChangeSubscription
               updateSubscription={() =>
-                signals.patron.updateSubscriptionClicked()
+                patronSequences.updateSubscriptionClicked()
               }
               cancelSubscription={() =>
-                signals.patron.cancelSubscriptionClicked()
+                patronSequences.cancelSubscriptionClicked()
               }
-              date={store.user.subscription.since}
+              date={user.subscription.since}
             />
           ) : (
             <Centered style={{ marginTop: '2rem' }} horizontal>
               <SubscribeForm
                 subscribe={token =>
-                  signals.patron.createSubscriptionClicked({ token })
+                  patronSequences.createSubscriptionClicked({ token })
                 }
-                isLoading={store.patron.isUpdatingSubscription}
-                name={store.user.name}
-                error={store.patron.error}
+                isLoading={patron.isUpdatingSubscription}
+                name={user.name}
+                error={patron.error}
               />
               <Notice>
                 You will be billed now and on the{' '}
@@ -94,4 +103,4 @@ function PricingChoice({ store, signals, badge }) {
   );
 }
 
-export default inject('store', 'signals')(observer(PricingChoice));
+export default connect(PricingChoice);

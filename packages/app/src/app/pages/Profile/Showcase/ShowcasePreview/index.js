@@ -1,8 +1,8 @@
 import React from 'react';
 
 import Preview from 'app/components/Preview';
-import { parseConfigurations } from 'app/store/utils/parse-configurations';
-import { mainModule } from 'app/store/utils/main-module';
+import { parseConfigurations } from 'app/main/utils/parse-configurations';
+import { mainModule } from 'app/main/utils/main-module';
 
 import { Container } from './elements';
 

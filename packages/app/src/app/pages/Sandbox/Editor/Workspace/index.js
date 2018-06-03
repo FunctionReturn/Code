@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 
 import VERSION from 'common/version';
 
-import getWorkspaceItems from 'app/store/modules/workspace/items';
+import getWorkspaceItems from 'app/main/modules/workspace/items';
 import SocialInfo from 'app/components/SocialInfo';
 
 import Files from './items/Files';

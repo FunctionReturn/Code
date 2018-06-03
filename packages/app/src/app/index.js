@@ -10,10 +10,11 @@ import requirePolyfills from 'common/load-dynamic-polyfills';
 import 'normalize.css';
 import 'common/global.css';
 import theme from 'common/theme';
-import { Provider } from 'mobx-react';
-import controller from './controller';
+import { Container } from '@cerebral/react';
+import App from 'cerebral';
+import main from './main';
 
-import App from './pages/index';
+import AppComponent from './pages/index';
 import './split-pane.css';
 import logError from './utils/error';
 
@@ -75,8 +76,23 @@ window.__isTouch = !matchMedia('(pointer:fine)').matches;
 requirePolyfills().then(() => {
   const rootEl = document.getElementById('root');
 
+  let Devtools = null;
+
+  if (process.env.NODE_ENV !== 'production') {
+    Devtools = require('cerebral/devtools').default; // eslint-disable-line
+  }
+
+  const app = App(main, {
+    devtools:
+      Devtools &&
+      Devtools({
+        host: 'localhost:8383',
+        reconnect: false,
+      }),
+  });
+
   const showNotification = (message, type) =>
-    controller.getSignal('notificationAdded')({
+    app.getSequence('notificationAdded')({
       type,
       message,
     });
@@ -84,7 +100,7 @@ requirePolyfills().then(() => {
   registerServiceWorker('/service-worker.js', {
     onUpdated: () => {
       debug('Updated SW');
-      controller.getSignal('setUpdateStatus')({ status: 'available' });
+      app.getSequence('setUpdateStatus')({ status: 'available' });
     },
     onInstalled: () => {
       debug('Installed SW');
@@ -97,13 +113,13 @@ requirePolyfills().then(() => {
 
   try {
     render(
-      <Provider {...controller.provide()}>
+      <Container app={app}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
-            <App />
+            <AppComponent />
           </Router>
-        </ThemeProvider>
-      </Provider>,
+        </ThemeProvider>,
+      </Container>,
       rootEl
     );
   } catch (e) {

@@ -1,5 +1,6 @@
 import React from 'react';
-import { inject, observer } from 'mobx-react';
+import { connect } from '@cerebral/react';
+import { state, sequences } from 'cerebral/tags';
 import Modal from 'app/components/Modal';
 import NewSandbox from 'app/components/NewSandbox';
 
@@ -81,18 +82,20 @@ const modals = {
   },
 };
 
-function Modals({ store, signals }) {
-  const modal = store.currentModal && modals[store.currentModal];
+function Modals({ get }) {
+  const currentModal = get(state`currentModal`);
+  const modalClosed = get(sequences`modalClosed`);
+  const modal = currentModal && modals[currentModal];
 
   return (
     <Modal
       isOpen={Boolean(modal)}
       width={modal && modal.width}
-      onClose={(isKeyDown: boolean) => signals.modalClosed({ isKeyDown })}
+      onClose={(isKeyDown: boolean) => modalClosed({ isKeyDown })}
     >
       {modal ? React.createElement(modal.Component) : null}
     </Modal>
   );
 }
 
-export default inject('store', 'signals')(observer(Modals));
+export default connect(Modals);

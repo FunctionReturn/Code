@@ -97,6 +97,7 @@
   "dependencies": {
     "@cerebral/http": "^4.0.0",
     "@cerebral/mobx-state-tree": "^3.0.0",
+    "@cerebral/react": "^4.0.0-1527883977316",
     "@emmetio/codemirror-plugin": "^0.3.5",
     "axios": "^0.16.2",
     "babel-helper-vue-jsx-merge-props": "^2.0.2",
@@ -116,7 +117,7 @@
     "babel-standalone": "^6.25.0",
     "base64-loader": "^1.0.0",
     "browser-resolve": "CompuIves/node-browser-resolve",
-    "cerebral": "^4.0.0",
+    "cerebral": "^5.0.0-1527883977316",
     "circular-json": "^0.4.0",
     "codemirror": "^5.27.4",
     "codesandbox-api": "^0.0.18",

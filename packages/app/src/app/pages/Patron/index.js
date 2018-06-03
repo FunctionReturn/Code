@@ -1,6 +1,6 @@
 import React from 'react';
-import { inject } from 'mobx-react';
-
+import { connect } from '@cerebral/react';
+import { sequences } from 'cerebral/tags';
 import Title from 'app/components/Title';
 import SubTitle from 'app/components/SubTitle';
 import MaxWidth from 'common/components/flex/MaxWidth';
@@ -14,7 +14,7 @@ import { Content } from './elements';
 
 class Patron extends React.Component {
   componentDidMount() {
-    this.props.signals.patron.patronMounted();
+    this.props.get(sequences`patron.patronMounted`)();
   }
   render() {
     document.title = 'Patron - CodeSandbox';
@@ -42,4 +42,4 @@ class Patron extends React.Component {
   }
 }
 
-export default inject('signals')(Patron);
+export default connect(Patron);

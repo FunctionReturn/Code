@@ -1,6 +1,6 @@
 import * as React from 'react';
-
-import { inject, observer } from 'mobx-react';
+import { connect } from '@cerebral/react';
+import { state } from 'cerebral/tags';
 import { clone } from 'mobx-state-tree';
 import { spring, Motion } from 'react-motion';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -24,8 +24,9 @@ class Notifications extends React.Component {
       // Only if user is not hovering
       if (!this.state.hovering) {
         const date = Date.now();
+        const notifications = this.props.get(state`notifications`);
         requestAnimationFrame(() => {
-          this.props.store.notifications.forEach(n => {
+          notifications.forEach(n => {
             // Delete notification if time is up
             if (n.endTime < date) {
               this.closeNotification(n.id);
@@ -57,7 +58,7 @@ class Notifications extends React.Component {
   interval: number;
 
   render() {
-    const notifications = this.props.store.notifications;
+    const notifications = this.props.get(state`notifications`);
     if (notifications.length === 0) {
       return null;
     }
@@ -103,4 +104,4 @@ class Notifications extends React.Component {
   }
 }
 
-export default inject('signals', 'store')(observer(Notifications));
+export default connect(Notifications);

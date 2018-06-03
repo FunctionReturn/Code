@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import { inject, observer } from 'mobx-react';
+import { connect } from '@cerebral/react';
+import { sequences } from 'cerebral/tags';
 import Loadable from 'react-loadable';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
@@ -71,7 +72,7 @@ type Props = {
 
 class Routes extends React.Component<Props> {
   componentWillUnmount() {
-    this.props.signals.appUnmounted();
+    this.props.get(sequences`appUnmounted`)();
   }
 
   shouldComponentUpdate() {
@@ -124,4 +125,4 @@ class Routes extends React.Component<Props> {
   }
 }
 
-export default inject('signals', 'store')(observer(Routes));
+export default connect(Routes);
