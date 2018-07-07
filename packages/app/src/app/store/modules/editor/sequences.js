@@ -164,20 +164,26 @@ export const saveCode = [
     ],
     false: [],
   },
-  actions.saveModuleCode,
   actions.setModuleSaved,
-  when(state`editor.currentSandbox.originalGit`),
+  actions.saveModuleCode,
   {
-    true: [
-      when(state`workspace.openedWorkspaceItem`, item => item === 'github'),
+    success: [
+      actions.setModuleSaved, // Set saved again in case another parallel sequence set is as unsaved
+      when(state`editor.currentSandbox.originalGit`),
       {
-        true: fetchGitChanges,
+        true: [
+          when(state`workspace.openedWorkspaceItem`, item => item === 'github'),
+          {
+            true: fetchGitChanges,
+            false: [],
+          },
+        ],
         false: [],
       },
+      sendModuleSaved,
     ],
-    false: [],
+    fail: [actions.addChangedModule],
   },
-  sendModuleSaved,
 ];
 
 export const discardModuleChanges = [

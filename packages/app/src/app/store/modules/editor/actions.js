@@ -383,7 +383,7 @@ export function prettifyCode({ utils, state, props, path }) {
     .catch(error => path.error({ error }));
 }
 
-export function saveModuleCode({ props, state, api, recover }) {
+export function saveModuleCode({ props, state, api, recover, path }) {
   const sandbox = state.get('editor.currentSandbox');
   const moduleToSave = sandbox.modules.find(
     module => module.shortid === props.moduleShortid
@@ -413,19 +413,21 @@ export function saveModuleCode({ props, state, api, recover }) {
             undefined
           );
           recover.remove(sandbox.id, moduleToSave);
-        } else {
-          state.set(
-            `editor.sandboxes.${newSandbox.id}.modules.${index}.savedCode`,
-            x.code
-          );
-          throw new Error(
-            `The code of '${title}' changed while saving, will ignore the save now. Please try again with saving.`
-          );
+
+          return path.success({});
         }
+
+        state.set(
+          `editor.sandboxes.${newSandbox.id}.modules.${index}.savedCode`,
+          x.code
+        );
+
+        return path.fail({});
       }
 
-      return x;
-    });
+      return path.success({});
+    })
+    .catch(() => path.fail({}));
 }
 
 export function getCurrentModuleId({ state }) {
