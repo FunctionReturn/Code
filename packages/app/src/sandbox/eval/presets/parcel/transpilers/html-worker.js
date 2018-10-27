@@ -61,9 +61,8 @@ self.addEventListener('message', async event => {
   const { code } = event.data;
 
   const resources = [];
-  const staticResources = [];
 
-  function addDependency(depPath: string, tag: string) {
+  function addDependency(depPath: string) {
     if (!isUrl(depPath)) {
       let assetPath = decodeURIComponent(depPath);
       if (/^\w/.test(assetPath)) {
@@ -80,19 +79,16 @@ self.addEventListener('message', async event => {
 
       return assetPath;
     }
-
-    staticResources.push([tag, depPath]);
-
     return false;
   }
 
-  function addSrcSetDependencies(srcset: string, tag: string) {
+  function addSrcSetDependencies(srcset: string) {
     const newSources = [];
 
     srcset.split(',').forEach(source => {
       const pair = source.trim().split(' ');
       if (pair.length === 0) return;
-      pair[0] = addDependency(pair[0], tag);
+      pair[0] = addDependency(pair[0]);
       newSources.push(pair.join(' '));
     });
     return newSources.join(',');
@@ -119,7 +115,7 @@ self.addEventListener('message', async event => {
       // eslint-disable-next-line no-restricted-syntax
       for (const attr in node.attrs) {
         if (node.tag === 'img' && attr === 'srcset') {
-          node.attrs[attr] = addSrcSetDependencies(node.attrs[attr], node.tag);
+          node.attrs[attr] = addSrcSetDependencies(node.attrs[attr]);
           continue;
         }
         const elements = ATTRS[attr];
@@ -138,7 +134,7 @@ self.addEventListener('message', async event => {
         }
 
         if (elements && elements.includes(node.tag)) {
-          const result = addDependency(node.attrs[attr], node.tag);
+          const result = addDependency(node.attrs[attr]);
 
           if (result) {
             if (node.tag === 'link' || node.tag === 'script') {
@@ -156,53 +152,17 @@ self.addEventListener('message', async event => {
   });
 
   const newHTML = render(res);
+  let compiledCode = ``;
 
-  const isChrome =
-    /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-
-  let compiledCode = isChrome
-    ? `function setupHTML() {
-      const HTML = ${JSON.stringify(newHTML)};
-      document.open('text/html');
-      document.write(HTML);
-      document.close();
-    }
-    setupHTML();
-`
-    : `
-function loadStyle(path, callback) {
-  return new Promise(resolve => {
-    var link = document.createElement('link');
-    link.onload = resolve;
-    link.type = 'text/css';
-    link.rel = 'stylesheet';
-    link.href = path;
-    document.head.appendChild(link);
-  });
-}
-
-function loadScript(path) {
-  return new Promise(resolve => {
-    var script = document.createElement('script');
-    script.onload = resolve;
-    script.type = 'text/javascript';
-    script.src = path;
-    document.head.appendChild(script);
-  });
-}
-
-function addResources() {
-  return Promise.all([${staticResources
-    .map(([type, src]) => {
-      const stringifiedResource = JSON.stringify(src);
-      return type === 'script'
-        ? `loadScript(${stringifiedResource})`
-        : `loadStyle(${stringifiedResource})`;
-    })
-    .join(',\n')}]);
-  }
-addResources().then(() => {
-`;
+  //   let compiledCode = `
+  // function setupHTML() {
+  //   const HTML = ${JSON.stringify(newHTML)}
+  //   document.open('text/html');
+  //   document.write(HTML);
+  //   document.close();
+  // }
+  // setupHTML();
+  // `;
 
   compiledCode += '\n';
   compiledCode += 'function loadResources() {';
@@ -213,17 +173,14 @@ addResources().then(() => {
   });
   compiledCode += '\n}';
 
-  compiledCode += isChrome
-    ? `
+  compiledCode += `
 if (document.readyState !== 'complete') {
   window.addEventListener('load', function() { loadResources() });
 } else {
   loadResources();
 }
-`
-    : `\nloadResources() });`;
 
-  console.log(compiledCode);
+`;
 
   self.postMessage({
     type: 'result',
