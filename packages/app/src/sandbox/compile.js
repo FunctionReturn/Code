@@ -510,7 +510,7 @@ async function compile({
 
       manager.preset.preEvaluate(manager);
 
-      if (!manager.webpackHMR && !manager.preset.htmlDisabled) {
+      if (!manager.webpackHMR) {
         const htmlModulePath = templateDefinition
           .getHTMLEntries(configurations)
           .find(p => modules[p]);
