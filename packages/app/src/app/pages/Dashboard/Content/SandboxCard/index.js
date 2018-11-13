@@ -354,9 +354,7 @@ class SandboxItem extends React.PureComponent<Props> {
     return `Generating Screenshot...`;
   };
 
-  hasScreenshot = () => {
-    return !this.props.removedAt && this.props.privacy !== 2;
-  };
+  hasScreenshot = () => !this.props.removedAt && this.props.privacy !== 2;
 
   render() {
     const {
