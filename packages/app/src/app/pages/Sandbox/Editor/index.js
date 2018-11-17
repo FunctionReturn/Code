@@ -55,7 +55,7 @@ class ContentSplit extends React.Component {
   render() {
     const { signals, store, match } = this.props;
     const sandbox = store.editor.currentSandbox;
-    const sandboxOwned = sandbox.owned;
+    const sandboxOwned = true;
 
     // Force MobX to update this component by observing the following value
     this.props.store.preferences.settings.editorTheme; // eslint-disable-line

@@ -41,6 +41,10 @@ const SERVER = {
 };
 
 export default function getItems(store) {
+  if (store.editor.currentSandbox && !store.editor.currentSandbox.owned) {
+    return [FILES, GITHUB, MORE];
+  }
+
   if (
     store.live.isLive &&
     !(

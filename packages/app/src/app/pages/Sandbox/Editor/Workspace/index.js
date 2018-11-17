@@ -50,7 +50,10 @@ function Workspace({ store }) {
     return null;
   }
 
-  const Component = sandbox.owned ? idToItem[currentItem] : NotOwnedSandboxInfo;
+  const Component =
+    currentItem === 'files' && !sandbox.owned
+      ? NotOwnedSandboxInfo
+      : idToItem[currentItem];
 
   const item = getWorkspaceItems(store).find(i => i.id === currentItem);
   return (
