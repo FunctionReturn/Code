@@ -52,7 +52,9 @@ class BabelTranspiler extends WorkerTranspiler {
           path.startsWith('/node_modules')) &&
         !shouldTranspile(code, path)
       ) {
+        console.log('helloooooo');
         regexGetRequireStatements(code).forEach(dependency => {
+          console.log(dependency);
           if (dependency.isGlob) {
             loaderContext.addDependenciesInDirectory(dependency.path);
           } else {

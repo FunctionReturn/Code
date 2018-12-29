@@ -631,14 +631,14 @@ export default class Manager {
 
           const dependencyName = getDependencyName(connectedPath);
 
-          if (
-            this.manifest.dependencies.find(d => d.name === dependencyName) ||
-            this.manifest.dependencyDependencies[dependencyName]
-          ) {
-            throw new ModuleNotFoundError(connectedPath, true, currentPath);
-          } else {
-            throw new DependencyNotFoundError(connectedPath, currentPath);
-          }
+          // if (
+          //   this.manifest.dependencies.find(d => d.name === dependencyName) ||
+          //   this.manifest.dependencyDependencies[dependencyName]
+          // ) {
+          throw new ModuleNotFoundError(connectedPath, true, currentPath);
+          // } else {
+          //   throw new DependencyNotFoundError(connectedPath, currentPath);
+          // }
         }
       }
     });
@@ -723,14 +723,14 @@ export default class Manager {
         const dependencyName = getDependencyName(connectedPath);
 
         // TODO: fix the stack hack
-        if (
-          this.manifest.dependencies.find(d => d.name === dependencyName) ||
-          this.manifest.dependencyDependencies[dependencyName]
-        ) {
-          throw new ModuleNotFoundError(connectedPath, true, currentPath);
-        } else {
-          throw new DependencyNotFoundError(connectedPath, currentPath);
-        }
+        // if (
+        //   this.manifest.dependencies.find(d => d.name === dependencyName) ||
+        //   this.manifest.dependencyDependencies[dependencyName]
+        // ) {
+        throw new ModuleNotFoundError(connectedPath, true, currentPath);
+        // } else {
+        //   throw new DependencyNotFoundError(connectedPath, currentPath);
+        // }
       }
     }
 
@@ -746,6 +746,7 @@ export default class Manager {
     currentTModule: TranspiledModule,
     ignoredExtensions: Array<string> = this.preset.ignoredExtensions
   ): Promise<TranspiledModule> {
+    console.log(path, currentTModule);
     return fetchModule(path, currentTModule, this, ignoredExtensions).then(
       module => this.getTranspiledModule(module)
     );
@@ -776,6 +777,7 @@ export default class Manager {
         )
       );
     } catch (e) {
+      console.log('hello world');
       if (e.type === 'module-not-found' && e.isDependency) {
         return this.downloadDependency(e.path, tModule, ignoredExtensions);
       }

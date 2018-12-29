@@ -247,13 +247,56 @@ async function findDependencyVersion(
     const packageJSON =
       manager.transpiledModules[foundPackageJSONPath] &&
       manager.transpiledModules[foundPackageJSONPath].module.code;
-    const { version, name } = JSON.parse(packageJSON);
+    const { version } = JSON.parse(packageJSON);
 
     if (packageJSON !== '//empty.js') {
-      return { packageJSONPath: foundPackageJSONPath, version, name };
+      return { packageJSONPath: foundPackageJSONPath, version };
     }
   } catch (e) {
-    /* do nothing */
+    // Check if the dependency is defined by the current dependency.
+    // So if eg. /node_modules/redux needs symbol-observable, then we first check
+    // whether we're in a dependency (redux), if that's true we check the package.json
+    // of that dependency to determine the version needed from symbol-observable.
+
+    try {
+      const currentDependency = getDependencyName(
+        currentTModule.module.path.replace(/.*\/node_modules\//, '')
+      );
+
+      if (currentDependency) {
+        const foundPackageJSONPath = await resolvePath(
+          pathUtils.join(currentDependency, 'package.json'),
+          currentTModule,
+          manager,
+          defaultExtensions
+        );
+
+        const packageJSON =
+          manager.transpiledModules[foundPackageJSONPath] &&
+          manager.transpiledModules[foundPackageJSONPath].module.code;
+
+        const pkg = JSON.parse(packageJSON);
+        const dependencies = {
+          ...(pkg.devDependencies || {}),
+          ...(pkg.dependencies || {}),
+        };
+        const version = dependencies[dependencyName];
+
+        if (packageJSON !== '//empty.js') {
+          return {
+            packageJSONPath: pathUtils.join(
+              pathUtils.dirname(foundPackageJSONPath),
+              'node_modules',
+              dependencyName,
+              'package.json'
+            ),
+            version,
+          };
+        }
+      }
+    } catch (ee) {
+      /* do nothing */
+    }
   }
 
   let version = null;
@@ -289,12 +332,16 @@ export default async function fetchModule(
     path.replace(/.*\/node_modules\//, '')
   );
 
+  console.log(dependencyName, currentPath);
+
   const versionInfo = await findDependencyVersion(
     currentTModule,
     manager,
     defaultExtensions,
     dependencyName
   );
+
+  console.log(versionInfo);
 
   if (!versionInfo) {
     throw new DependencyNotFoundError(path);
