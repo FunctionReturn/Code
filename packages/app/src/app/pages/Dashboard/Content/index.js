@@ -5,6 +5,7 @@ import RecentSandboxes from './routes/RecentSandboxes';
 import PathedSandboxes from './routes/PathedSandboxes';
 import DeletedSandboxes from './routes/DeletedSandboxes';
 import SearchSandboxes from './routes/SearchSandboxes';
+import Stats from './routes/Stats';
 import CreateTeam from './routes/CreateTeam';
 import TeamView from './routes/TeamView';
 
@@ -20,6 +21,7 @@ const Content = () => (
       path="/dashboard/teams/:teamId/sandboxes/:path*"
       component={PathedSandboxes}
     />
+    <Route path="/dashboard/stats" component={Stats} />
     <Redirect to="/dashboard/recent" />
   </Switch>
 );

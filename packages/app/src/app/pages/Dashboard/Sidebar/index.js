@@ -7,6 +7,7 @@ import Input from 'common/components/Input';
 import Button from 'app/components/Button';
 import TimeIcon from 'react-icons/lib/md/access-time';
 import PeopleIcon from 'react-icons/lib/md/people';
+import Chart from 'react-icons/lib/md/show-chart';
 
 import { teamOverviewUrl } from 'common/utils/url-generator';
 
@@ -33,7 +34,6 @@ class Sidebar extends React.Component {
 
   render() {
     const { store } = this.props;
-
     return (
       <SidebarStyled>
         <InputWrapper>
@@ -64,18 +64,19 @@ class Sidebar extends React.Component {
             return (
               <React.Fragment>
                 <Items style={{ marginBottom: '1rem' }}>
+                  <CategoryHeader>{(store.user || {}).name}</CategoryHeader>
                   <Item
                     Icon={TimeIcon}
                     path="/dashboard/recent"
                     name="Recent"
                   />
-
                   <SandboxesItem
                     currentPath={path}
                     currentTeamId={currentTeamId}
                     openByDefault
                   />
                   <TrashItem />
+                  <Item Icon={Chart} path="/dashboard/stats" name="Stats" />
                 </Items>
 
                 <Query query={TEAMS_QUERY}>
