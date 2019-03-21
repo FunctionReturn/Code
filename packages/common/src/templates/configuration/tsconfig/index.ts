@@ -52,6 +52,34 @@ const config: ConfigurationFile = {
       );
     }
 
+    if (template === 'create-react-app') {
+      return JSON.stringify(
+        {
+          compilerOptions: {
+            outDir: 'build/dist',
+            module: 'esnext',
+            target: 'es5',
+            lib: ['es6', 'dom'],
+            allowJs: true,
+            jsx: 'react',
+            rootDir: 'src',
+            esModuleInterop: true,
+          },
+          exclude: [
+            'node_modules',
+            'build',
+            'scripts',
+            'acceptance-tests',
+            'webpack',
+            'jest',
+            'src/setupTests.ts',
+          ],
+        },
+        null,
+        2
+      );
+    }
+
     if (template === 'parcel') {
       const tsconfig = {
         compilerOptions: {
@@ -174,8 +202,6 @@ const config: ConfigurationFile = {
 
   schema:
     'https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/tsconfig.json',
-
-  partialSupportDisclaimer: `Only \`compilerOptions\` field is supported.`,
 };
 
 export default config;

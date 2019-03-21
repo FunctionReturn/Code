@@ -51,6 +51,26 @@ export function modulesByPath() {
   return modulesObject;
 }
 
+export function modulesByPathWithGeneratedConfig() {
+  const modulesObject = { ...this.modulesByPath };
+
+  const parsedConfigs = this.parsedConfigurations;
+  Object.keys(parsedConfigs).forEach(val => {
+    const { path, code } = parsedConfigs[val];
+    if (modulesObject[path]) {
+      return;
+    }
+    modulesObject[path] = {
+      code,
+      shortid: val,
+      id: val,
+      type: 'file',
+    };
+  });
+
+  return modulesObject;
+}
+
 export function currentTab() {
   const currentTabId = this.currentTabId;
   const tabs = this.tabs;

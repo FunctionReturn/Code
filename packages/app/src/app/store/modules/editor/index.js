@@ -12,6 +12,7 @@ import {
   parsedConfigurations,
   currentTab,
   modulesByPath,
+  modulesByPathWithGeneratedConfig,
   isAdvancedEditor,
 } from './getters';
 import { isModuleSynced, shouldDirectoryBeOpen } from './computed';
@@ -58,6 +59,7 @@ export default Module({
     parsedConfigurations,
     currentTab,
     modulesByPath,
+    modulesByPathWithGeneratedConfig,
     isAdvancedEditor,
   },
   computed: {

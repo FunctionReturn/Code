@@ -165,7 +165,7 @@ window.BrowserFS.configure(
           api: {
             getState: () => ({
               modulesByPath: controller.getState().editor.currentSandbox
-                ? controller.getState().editor.modulesByPath
+                ? controller.getState().editor.modulesByPathWithGeneratedConfig
                 : {},
             }),
           },

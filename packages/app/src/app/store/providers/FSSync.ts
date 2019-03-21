@@ -43,7 +43,8 @@ function getTypesInfo() {
 
 async function syncDependencyTypings(
   packageJSON: string,
-  autoInstallTypes: boolean
+  hasNativeTypeScript: boolean,
+  addNpmDependency: (name: string, version?: string) => void
 ) {
   try {
     types = {};
@@ -55,18 +56,20 @@ async function syncDependencyTypings(
       ...devDependencies,
     };
 
-    if (autoInstallTypes) {
-      const typeInfo = await getTypesInfo();
-      Object.keys(totalDependencies).forEach(async dep => {
-        if (
-          !dep.startsWith('@types/') &&
-          !totalDependencies[`@types/${dep}`] &&
-          typeInfo[dep]
-        ) {
-          totalDependencies[`@types/${dep}`] = typeInfo[dep].latest;
+    const typeInfo = await getTypesInfo();
+    Object.keys(totalDependencies).forEach(async dep => {
+      if (
+        !dep.startsWith('@types/') &&
+        !totalDependencies[`@types/${dep}`] &&
+        typeInfo[dep]
+      ) {
+        totalDependencies[`@types/${dep}`] = typeInfo[dep].latest;
+
+        if (hasNativeTypeScript) {
+          addNpmDependency(`@types/${dep}`, typeInfo[dep].latest);
         }
-      });
-    }
+      }
+    });
 
     const absoluteDependencies = await getAbsoluteDependencies(
       totalDependencies
@@ -104,13 +107,15 @@ export default Provider({
 
     const sendFiles = () => {
       if (this.context.controller.getState().editor.currentId) {
-        const { modulesByPath } = this.context.controller.getState().editor;
+        const {
+          modulesByPathWithGeneratedConfig,
+        } = this.context.controller.getState().editor;
 
         global.postMessage(
           {
             $broadcast: true,
             $type: 'file-sync',
-            $data: modulesByPath,
+            $data: modulesByPathWithGeneratedConfig,
           },
           protocolAndHost()
         );
@@ -135,10 +140,21 @@ export default Provider({
                 return;
               }
 
-              fs.stat('/sandbox/tsconfig.json', (err, result) => {
-                // If tsconfig exists we want to sync the types
-                syncDependencyTypings(rv.toString(), !!err || !result);
-              });
+              const tsConfig = this.context.controller.getState().editor
+                .modulesByPath['/tsconfig.json'];
+
+              // If tsconfig exists we want to sync the types
+              syncDependencyTypings(
+                rv.toString(),
+                !!tsConfig,
+                (name, version) => {
+                  this.context.controller.getSignal('editor.addNpmDependency')({
+                    name,
+                    version,
+                    isDev: true,
+                  });
+                }
+              );
             });
           }
         });
