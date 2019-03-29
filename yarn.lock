@@ -12531,10 +12531,10 @@ gatsby-remark-prismjs@^1.2.11:
     prismjs "^1.12.2"
     unist-util-visit "^1.3.0"
 
-gatsby-source-airtable@^2.0.2:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/gatsby-source-airtable/-/gatsby-source-airtable-2.0.5.tgz#ac43e7ce6d81fa2f57cd7e4bbb97f2051aeec127"
-  integrity sha512-VfLaO6XA1qKzLYitWXuEehArEOVq7Zelz23JuMoz96t7gIMR6gY5UaI2EBnv/qCLh/kKGD/RhZum1xqHCP04yw==
+gatsby-source-airtable@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/gatsby-source-airtable/-/gatsby-source-airtable-2.0.6.tgz#21ac4914207c1cdd30d6c90668b62a31fe03abc3"
+  integrity sha512-Poo9WtM/YGCdmn5wyS5EnyT6BK6hi3XZGYMToPNdFGWz3eBncVFu4ucS/+N8Id/AKb5VdJcMpP1c22ktq4BAjA==
   dependencies:
     airtable "^0.5.6"
 
