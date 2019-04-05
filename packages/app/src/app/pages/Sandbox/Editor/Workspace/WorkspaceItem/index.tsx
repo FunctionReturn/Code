@@ -47,9 +47,9 @@ export default class WorkspaceItem extends React.Component<Props, State> {
 
     return (
       <>
-        <ItemHeader style={style} onClick={this.toggleOpen}>
-          <ExpandIconContainer open={open} />
-          <Title>{title}</Title>
+        <ItemHeader style={style}>
+          <ExpandIconContainer open={open} onClick={this.toggleOpen} />
+          <Title onClick={this.toggleOpen}>{title}</Title>
 
           {open && <Actions>{actions}</Actions>}
         </ItemHeader>

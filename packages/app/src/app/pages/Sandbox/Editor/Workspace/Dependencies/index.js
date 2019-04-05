@@ -1,11 +1,12 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import { inject, observer } from 'mobx-react';
-
+import RefreshIcon from 'react-icons/lib/md/refresh';
 import Margin from '@codesandbox/common/lib/components/spacing/Margin';
+import Tooltip from '@codesandbox/common/lib/components/Tooltip';
 import getDefinition from '@codesandbox/common/lib/templates';
-import { WorkspaceSubtitle } from '../elements';
-
+import { WorkspaceSubtitle, Icon } from '../elements';
+import WorkspaceItem from '../WorkspaceItem';
 import AddVersion from './AddVersion';
 import VersionEntry from './VersionEntry';
 import AddResource from './AddResource';
@@ -36,8 +37,44 @@ function Dependencies({ signals, store }) {
 
   const templateDefinition = getDefinition(sandbox.template);
 
+  const updateAllDeps = async () => {
+    const updatedDeps = Object.keys(dependencies).map(async name =>
+      setTimeout(
+        () =>
+          signals.editor.addNpmDependency({
+            name,
+          }),
+        1000
+      )
+    );
+
+    Promise.all(updatedDeps)
+      .then(() =>
+        signals.notificationAdded({
+          message: `Your dependencies were all updated`,
+          type: 'success',
+        })
+      )
+      .catch(() => {
+        signals.notificationAdded({
+          message: `There was a problem updating your dependencies`,
+          type: 'error',
+        });
+      });
+  };
+
   return (
-    <div>
+    <WorkspaceItem
+      defaultOpen
+      title="Dependencies"
+      actions={
+        <Tooltip content="Update all dependencies">
+          <Icon onClick={updateAllDeps}>
+            <RefreshIcon />
+          </Icon>
+        </Tooltip>
+      }
+    >
       <Margin bottom={0}>
         {Object.keys(dependencies)
           .sort()
@@ -99,7 +136,7 @@ function Dependencies({ signals, store }) {
           />
         </div>
       )}
-    </div>
+    </WorkspaceItem>
   );
 }
 
